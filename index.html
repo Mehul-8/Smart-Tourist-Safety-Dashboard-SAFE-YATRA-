@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Tourist Safety Dashboard — Admin Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===================== ADMIN LOGIN PAGE OVERLAY ===================== -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-brand">
+      <h1>Smart Tourist Safety Dashboard</h1>
+      <p class="login-subtitle">Authority & Emergency Response Admin Portal</p>
+    </div>
+
+    <form id="loginForm" class="login-form">
+      <div id="loginError" class="login-error hidden"></div>
+
+      <div class="form-group">
+        <label for="loginEmail">Email Address</label>
+        <input type="email" id="loginEmail" class="input" placeholder="admin@safety.gov" required autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" class="input" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+        <span class="btn-spinner hidden" id="loginSpinner"></span>
+        <span id="loginBtnText">Sign In to Dashboard</span>
+      </button>
+
+      <div class="login-hint">
+        <span>Protected Authority System. Authorized administrative access only.</span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== MAIN APPLICATION ===================== -->
+<div class="app" id="appRoot">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-text">
+        <span class="brand-name">Smart Tourist</span>
+        <span class="brand-sub">Safety Dashboard</span>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-view="dashboard">
+        <span class="nav-ic">
+          <svg class="nav-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </span>
+        Dashboard
+      </button>
+      <button class="nav-item" data-view="risk">
+        <span class="nav-ic">
+          <svg class="nav-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </span>
+        Risk Monitoring
+      </button>
+      <button class="nav-item" data-view="geofences">
+        <span class="nav-ic">
+          <svg class="nav-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </span>
+        Geofences
+      </button>
+      <button class="nav-item" data-view="settings">
+        <span class="nav-ic">
+          <svg class="nav-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </span>
+        Settings
+      </button>
+    </nav>
+    <button class="nav-item logout" id="logoutBtn">
+      <span class="nav-ic">
+        <svg class="nav-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </span>
+      Logout
+    </button>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1 id="viewTitle">Dashboard</h1>
+        <span class="project-tag">Smart Tourist Safety Dashboard</span>
+        <span class="live-dot"><i></i>Live</span>
+      </div>
+      <div class="topbar-right">
+        <span class="conn-status" id="connStatus">Connecting…</span>
+        <button class="icon-btn" id="bellBtn" title="Emergency Alerts">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="dot-badge" id="bellBadge" hidden></span>
+        </button>
+        <div class="admin-chip" id="adminUserChip">Admin</div>
+      </div>
+    </header>
+
+    <div class="scroll">
+
+      <!-- ===================== DASHBOARD VIEW ===================== -->
+      <section class="view" id="view-dashboard">
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">Total Tourists</span>
+            <span class="kpi-value" id="kpiTotal">—</span>
+          </div>
+          <div class="kpi-card risk-low">
+            <span class="kpi-label">Low Risk</span>
+            <span class="kpi-value" id="kpiLow">—</span>
+          </div>
+          <div class="kpi-card risk-med">
+            <span class="kpi-label">Medium Risk</span>
+            <span class="kpi-value" id="kpiMed">—</span>
+          </div>
+          <div class="kpi-card risk-high">
+            <span class="kpi-label">High Risk</span>
+            <span class="kpi-value" id="kpiHigh">—</span>
+          </div>
+          <div class="kpi-card kpi-emergency">
+            <span class="kpi-label">Active Emergencies</span>
+            <span class="kpi-value" id="kpiEmergencies">—</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Outside Safe Zones</span>
+            <span class="kpi-value" id="kpiOutside">—</span>
+          </div>
+        </div>
+
+        <div class="split-grid">
+          <div class="panel panel-emergency">
+            <div class="panel-head">
+              <h2>Active Emergencies</h2>
+              <span class="panel-count" id="emergencyCount">0</span>
+            </div>
+            <div class="panel-body" id="dashEmergencyList">
+              <p class="empty-state">No active emergencies.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Risk Distribution</h2>
+            </div>
+            <div class="panel-body">
+              <div class="risk-bar-row">
+                <span class="risk-bar-label low">Low</span>
+                <div class="risk-bar-track"><div class="risk-bar-fill low" id="barLow"></div></div>
+                <span class="risk-bar-num" id="numLow">0</span>
+              </div>
+              <div class="risk-bar-row">
+                <span class="risk-bar-label med">Medium</span>
+                <div class="risk-bar-track"><div class="risk-bar-fill med" id="barMed"></div></div>
+                <span class="risk-bar-num" id="numMed">0</span>
+              </div>
+              <div class="risk-bar-row">
+                <span class="risk-bar-label high">High</span>
+                <div class="risk-bar-track"><div class="risk-bar-fill high" id="barHigh"></div></div>
+                <span class="risk-bar-num" id="numHigh">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Live Tourist Monitoring</h2>
+            <span class="panel-sub">Real-time status of monitored tourists</span>
+          </div>
+          <div class="table-wrap" id="dashTouristTableWrap"></div>
+        </div>
+
+      </section>
+
+      <!-- ===================== RISK MONITORING VIEW ===================== -->
+      <section class="view hidden" id="view-risk">
+        <div class="split-grid">
+          <div class="panel">
+            <div class="panel-head"><h2>Risk Distribution</h2></div>
+            <div class="panel-body">
+              <div class="risk-bar-row">
+                <span class="risk-bar-label low">Low</span>
+                <div class="risk-bar-track"><div class="risk-bar-fill low" id="barLow2"></div></div>
+                <span class="risk-bar-num" id="numLow2">0</span>
+              </div>
+              <div class="risk-bar-row">
+                <span class="risk-bar-label med">Medium</span>
+                <div class="risk-bar-track"><div class="risk-bar-fill med" id="barMed2"></div></div>
+                <span class="risk-bar-num" id="numMed2">0</span>
+              </div>
+              <div class="risk-bar-row">
+                <span class="risk-bar-label high">High</span>
+                <div class="risk-bar-track"><div class="risk-bar-fill high" id="barHigh2"></div></div>
+                <span class="risk-bar-num" id="numHigh2">0</span>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Recently Increased Risk</h2></div>
+            <div class="panel-body" id="riskIncreaseList">
+              <p class="empty-state">No recent increases.</p>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Highest-Risk Tourists</h2></div>
+          <div class="table-wrap" id="highRiskTableWrap"></div>
+        </div>
+      </section>
+
+      <!-- ===================== GEOFENCES VIEW ===================== -->
+      <section class="view hidden" id="view-geofences">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Geofence / Zone Management</h2>
+            <button class="btn btn-primary" id="openAddGeofenceBtn">
+              <span class="btn-icon">+</span> Add Geofence
+            </button>
+          </div>
+          <div class="table-wrap" id="geofenceTableWrap"></div>
+        </div>
+      </section>
+
+      <!-- ===================== SETTINGS VIEW ===================== -->
+      <section class="view hidden" id="view-settings">
+        <div class="panel">
+          <div class="panel-head"><h2>Settings & Parameters</h2></div>
+          <div class="panel-body">
+            <p class="empty-state">Smart Tourist Safety Dashboard configuration panel — customize risk thresholds, geofence boundary alerts, and administrator notifications.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ===================== ADD GEOFENCE MODAL ===================== -->
+<div class="modal-overlay" id="geofenceModal" hidden>
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>Add New Geofence Zone</h3>
+      <button class="icon-btn" id="closeGeofenceModal" title="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <form id="addGeofenceForm">
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="zoneName">Zone Name *</label>
+          <input type="text" id="zoneName" class="input" placeholder="e.g. City Heritage Centre" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="zoneType">Zone Type</label>
+            <select id="zoneType" class="input select">
+              <option value="Tourist Hub">Tourist Hub</option>
+              <option value="Safe Haven">Safe Haven</option>
+              <option value="Restricted Area">Restricted Area</option>
+              <option value="Beach / Coastal">Beach / Coastal</option>
+              <option value="Nature Trail / Mountain">Nature Trail / Mountain</option>
+              <option value="Border Zone">Border Zone</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="zoneRisk">Risk Level</label>
+            <select id="zoneRisk" class="input select">
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM">MEDIUM</option>
+              <option value="HIGH">HIGH</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="zoneRadius">Radius (meters) *</label>
+            <input type="number" id="zoneRadius" class="input" placeholder="e.g. 500" min="10" required>
+          </div>
+          <div class="form-group">
+            <label for="zoneActive">Status</label>
+            <select id="zoneActive" class="input select">
+              <option value="true">Active (Monitored)</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="zoneLat">Latitude</label>
+            <input type="number" id="zoneLat" class="input" step="any" placeholder="e.g. 28.6139">
+          </div>
+          <div class="form-group">
+            <label for="zoneLng">Longitude</label>
+            <input type="number" id="zoneLng" class="input" step="any" placeholder="e.g. 77.2090">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="zoneDesc">Description</label>
+          <textarea id="zoneDesc" class="input textarea" rows="3" placeholder="Brief description of the zone safety protocols or instructions..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-foot">
+        <button type="button" class="btn" id="cancelGeofenceBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveGeofenceBtn">Create Geofence</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== TOURIST DETAIL DRAWER ===================== -->
+<div class="drawer-overlay" id="drawerOverlay">
+  <aside class="drawer" id="touristDrawer">
+    <div class="drawer-head">
+      <h2 id="drawerName">Tourist Details</h2>
+      <button class="icon-btn" id="drawerClose" title="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+</div>
+
+<!-- ===================== TOAST CONTAINER ===================== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Scripts -->
+<script type="module" src="firebase-config.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
